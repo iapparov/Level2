@@ -1,15 +1,22 @@
 package main
 
 import (
-	"NtpWb/app"
-	"log"
+	"StrUnpacker/app"
+	"bufio"
 	"fmt"
+	"log"
 	"os"
 )
 
 func main() {
-	// Получаем время через NTP
-	time, err := app.GetTime()
+	scanner := bufio.NewScanner(os.Stdin)
+	var s string
+	if scanner.Scan() {
+		s = scanner.Text()
+	}
+
+	// Вызываем функцию распаковки строки
+	ans, err := app.StrUnpack(s)
 
 
 	// Если произошла ошибка, выводим её в stderr и завершаем программу с кодом 1
@@ -20,6 +27,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Если ошибок нет, выводим время в STDOUT
-	fmt.Println(time)
+	// Если ошибок нет, выводим в STDOUT
+	fmt.Println(ans)
 }
