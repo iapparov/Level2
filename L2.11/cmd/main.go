@@ -1,17 +1,15 @@
 package main
 
 import (
-	"fmt"
+	"Dictionary/app"
 	"bufio"
+	"fmt"
+	"io"
 	"os"
 	"strings"
-	"io"
-	"Dictionary/app"
 )
 
-
-
-func main(){
+func main() {
 	s := ImportStr()
 	res := app.AnSearcher(s)
 	for k, v := range res {
@@ -19,8 +17,7 @@ func main(){
 	}
 }
 
-
-func ImportStr() []string{
+func ImportStr() []string {
 	reader := bufio.NewReader(os.Stdin)
 	line, err := reader.ReadString('\n') // читаем до Enter
 	if err != nil && err != io.EOF {
@@ -28,9 +25,7 @@ func ImportStr() []string{
 		os.Exit(1)
 	}
 
-
 	// разбиваем по пробелам
 	words := strings.Fields(line)
-
 	return words
 }

@@ -12,7 +12,7 @@ func TestAnSearcher(t *testing.T) {
 		{
 			input: []string{"пятак", "пятка", "тяпка", "листок", "слиток", "столик", "стол"},
 			expected: map[string][]string{
-				"пятак": {"пятак", "пятка", "тяпка"},
+				"пятак":  {"пятак", "пятка", "тяпка"},
 				"листок": {"листок", "слиток", "столик"},
 			},
 		},
@@ -24,14 +24,14 @@ func TestAnSearcher(t *testing.T) {
 			},
 		},
 		{
-			input: []string{"hello", "world"},
+			input:    []string{"hello", "world"},
 			expected: map[string][]string{},
 		},
 		{
-			input: []string{},
+			input:    []string{},
 			expected: map[string][]string{},
 		},
-		}
+	}
 
 	for _, test := range tests {
 		result := AnSearcher(test.input)
@@ -55,7 +55,7 @@ func TestAnSearcher(t *testing.T) {
 					break
 				}
 			}
-		}		
+		}
 	}
 }
 
