@@ -7,7 +7,7 @@ import (
 )
 
 func TestInputFromStdin(t *testing.T) {
-	const data = "line1\nline2\n"
+	data := "line1\nline2\n"
 	oldStdin := os.Stdin
 	r, w, err := os.Pipe()
 	if err != nil {
