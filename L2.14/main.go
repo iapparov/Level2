@@ -17,8 +17,8 @@ func main(){
 		return c
 	}
 
-	or = func(channels ...<-chan interface{}) <-chan interface{} {
-		switch len(channels){
+	or = func(channels ...<-chan interface{}) <-chan interface{}{
+		switch len(channels){ // в случае если каналов 0 или 1, то либо возвращаем nil, либо сам канал
 			case 0:
 				return nil
 			case 1:
@@ -29,17 +29,17 @@ func main(){
 		go func(){
 			defer close(out)
 			switch len(channels){
-				case 2:
+				case 2: // если каналов 2, то просто ждем любой из них
 					select{
 					case <-channels[0]:
 					case <-channels[1]:
 					}
 				default:
-					select{
+					select{ // иначе ждем первый из первых 3 каналов, и рекурсивно вызываем or для остальных
 						case <-channels[0]:
 						case <-channels[1]:
 						case <-channels[2]:
-						case <-or(append(channels[3:], out)...):
+						case <-or(append(channels[3:], out)...): // добавляем out в конец, чтобы гарантировать, что горутина не утечет (если какая-то из первых 3 каналов закроется, то out закроется в любом случае)
 					}
 			}
 		}()
@@ -57,3 +57,15 @@ func main(){
 	)
 	fmt.Printf("done after %v", time.Since(start))
 }
+
+/* 
+вообще кусок с горутиной в функции or можно реализовать как 
+		go func(){
+			defer close(out)
+				select{ // 
+					case <-channels[0]:
+					case <-or(append(channels[1:], out)...): // добавляем out в конец, чтобы гарантировать, что горутина не утечет (если какая-то из первых 3 каналов закроется, то out закроется в любом случае)
+				}
+		}()
+Но в этом случае глубина рекурсии кратно увеличится, количество горутин возрастет и производительность уменьшится
+*/
