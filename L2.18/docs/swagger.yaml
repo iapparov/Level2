@@ -1,0 +1,256 @@
+definitions:
+  app.Event:
+    properties:
+      date:
+        type: string
+      event:
+        type: string
+      event_id:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  app.EventRequest:
+    properties:
+      date:
+        type: string
+      event:
+        type: string
+      event_id:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  web.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /create_event:
+    post:
+      consumes:
+      - application/json
+      description: Create new calendar event
+      parameters:
+      - description: Event to create
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/app.EventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'created event" // note: response wrapped as {"result": <app.Event>}'
+          schema:
+            $ref: '#/definitions/app.Event'
+        "400":
+          description: invalid user_id or date
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "503":
+          description: service unavailable
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Create event
+      tags:
+      - events
+  /delete_event:
+    post:
+      consumes:
+      - application/json
+      description: Delete event by event_id for given user
+      parameters:
+      - description: Event delete request (needs event_id and user_id)
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/app.EventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/app.EventRequest'
+            type: array
+        "400":
+          description: invalid user_id or date
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "503":
+          description: service unavailable
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Delete event
+      tags:
+      - events
+  /events_for_day:
+    get:
+      consumes:
+      - application/json
+      description: Get events for a specific day for a user
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      - description: Date in format YYYY-MM-DD
+        in: query
+        name: date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: list of events
+          schema:
+            items:
+              $ref: '#/definitions/app.Event'
+            type: array
+        "400":
+          description: invalid user_id or date
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "503":
+          description: service unavailable
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Events for day
+      tags:
+      - events
+  /events_for_month:
+    get:
+      consumes:
+      - application/json
+      description: Get events for the month that contains the given date
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      - description: Date in format YYYY-MM-DD (any day of the month)
+        in: query
+        name: date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/app.Event'
+            type: array
+        "400":
+          description: invalid user_id or date
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "503":
+          description: service unavailable
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Events for month
+      tags:
+      - events
+  /events_for_week:
+    get:
+      consumes:
+      - application/json
+      description: Get events for the ISO week that contains the given date
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      - description: Date in format YYYY-MM-DD (any day of the week)
+        in: query
+        name: date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/app.Event'
+            type: array
+        "400":
+          description: invalid user_id or date
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "503":
+          description: service unavailable
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Events for week
+      tags:
+      - events
+  /update_event:
+    post:
+      consumes:
+      - application/json
+      description: Update existing calendar event (by event_id)
+      parameters:
+      - description: Event update request
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/app.EventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'updated event" // note: response wrapped as {"result": <app.Event>}'
+          schema:
+            $ref: '#/definitions/app.Event'
+        "400":
+          description: invalid user_id or date
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+        "503":
+          description: service unavailable
+          schema:
+            $ref: '#/definitions/web.ErrorResponse'
+      summary: Update event
+      tags:
+      - events
+swagger: "2.0"
